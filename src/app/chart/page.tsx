@@ -1,19 +1,12 @@
 'use client';
 
-import {useQuery, useQueries} from '@tanstack/react-query';
-import axiosInstance from '@/services/interceptor';
+import {useQuery} from '@tanstack/react-query';
 import {useMemo} from 'react';
 import Chart from 'react-apexcharts';
 import TableLoadingSkeleton from '@/components/table/TableLoadingSkeleton';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {useAppSelector} from '@/hooks/useAppSelector';
-import {serviceRoutes} from '@/services/serviceRoutes';
-import {QUERY_KEYS} from "@/constants/queryKeys";
-
-interface Post {
-   id: number;
-   commentCount: number;
-}
+import {serviceActions} from "@/services/serviceActions";
 
 const THEMES_COLORS = {
    light: {
@@ -31,18 +24,8 @@ function ChartPage() {
 
    const {textColor, gridBorderColor} = THEMES_COLORS[theme];
 
-   const {data: posts = [], isLoading, error} = useQuery({
-      queryKey: [QUERY_KEYS.POSTS],
-      queryFn: async ({signal}) => {
-         console.log('signal',signal)
-         const response = await axiosInstance.get<Post[]>(serviceRoutes.posts, {signal});
-         return await Promise.all(
-            response.data.map(async (post) => {
-               const commentsResponse = await axiosInstance.get(serviceRoutes.postsById(post.id), {signal});
-               return {...post, commentCount: commentsResponse.data.length};
-            })
-         );
-      },
+   const {data: posts = [], isLoading, error,} = useQuery({
+      ...serviceActions.getChartQueryOptions(),
    });
 
    const chartData = useMemo(() => {

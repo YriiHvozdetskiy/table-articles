@@ -1,5 +1,5 @@
 
 export const serviceRoutes = {
-   posts: '/posts', // todo
+   posts: '/posts',
    postsById: (id: number) => `/posts/${id}/comments`,
 }
