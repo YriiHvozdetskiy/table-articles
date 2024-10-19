@@ -33,12 +33,12 @@ function ChartPage() {
 
    const {data: posts = [], isLoading, error} = useQuery({
       queryKey: [QUERY_KEYS.POSTS],
-      queryFn: async () => {
-         const response = await axiosInstance.get<Post[]>(serviceRoutes.posts);
-         // todo замінити на useQuerys
+      queryFn: async ({signal}) => {
+         console.log('signal',signal)
+         const response = await axiosInstance.get<Post[]>(serviceRoutes.posts, {signal});
          return await Promise.all(
             response.data.map(async (post) => {
-               const commentsResponse = await axiosInstance.get(serviceRoutes.postsById(post.id));
+               const commentsResponse = await axiosInstance.get(serviceRoutes.postsById(post.id), {signal});
                return {...post, commentCount: commentsResponse.data.length};
             })
          );
