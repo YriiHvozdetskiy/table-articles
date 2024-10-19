@@ -14,8 +14,8 @@ import {useAppSelector} from "@/hooks/useAppSelector";
 import {setTheme} from "@/store/theme/themeSlice";
 
 const themes = [
-   {value: 'light', label: 'Світла', icon: Sun},
-   {value: 'dark', label: 'Темна', icon: Moon},
+   {value: 'light', label: 'Light', icon: Sun},
+   {value: 'dark', label: 'Dark', icon: Moon},
 ];
 
 export default function ThemeSwitcher() {
@@ -39,7 +39,7 @@ export default function ThemeSwitcher() {
    return (
       <Select value={theme} onValueChange={handleThemeChange}>
          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Оберіть тему"/>
+            <SelectValue placeholder="Choose a theme"/>
          </SelectTrigger>
          <SelectContent>
             {themes.map(({value, label, icon: Icon}) => (
