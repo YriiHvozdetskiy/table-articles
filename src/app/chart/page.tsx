@@ -1,13 +1,14 @@
-'use client'
+'use client';
 
-import { useQuery } from "@tanstack/react-query";
-import axiosInstance from "@/services/interceptor";
-import { useState, useEffect } from "react";
-import Chart from "react-apexcharts";
-import TableLoadingSkeleton from "@/components/table/TableLoadingSkeleton";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {useAppSelector} from "@/hooks/useAppSelector";
-import {serviceRoutes} from "@/services/serviceRoutes";
+import {useQuery, useQueries} from '@tanstack/react-query';
+import axiosInstance from '@/services/interceptor';
+import {useMemo} from 'react';
+import Chart from 'react-apexcharts';
+import TableLoadingSkeleton from '@/components/table/TableLoadingSkeleton';
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
+import {useAppSelector} from '@/hooks/useAppSelector';
+import {serviceRoutes} from '@/services/serviceRoutes';
+import {QUERY_KEYS} from "@/constants/queryKeys";
 
 interface Post {
    id: number;
@@ -15,161 +16,127 @@ interface Post {
 }
 
 const THEMES_COLORS = {
-   light: '#f4f4f5',
-   dark: '#010101',
+   light: {
+      textColor: '#010101',
+      gridBorderColor: '#e5e7eb',
+   },
+   dark: {
+      textColor: '#f4f4f5',
+      gridBorderColor: '#52525b',
+   },
 };
 
-function LineChartPage() {
+function ChartPage() {
    const theme = useAppSelector((state) => state.theme.theme);
 
-   const { data: posts = [], isLoading, error } = useQuery({
-      queryKey: ['posts'],
+   const {textColor, gridBorderColor} = THEMES_COLORS[theme];
+
+   const {data: posts = [], isLoading, error} = useQuery({
+      queryKey: [QUERY_KEYS.POSTS],
       queryFn: async () => {
          const response = await axiosInstance.get<Post[]>(serviceRoutes.posts);
+         // todo замінити на useQuerys
          return await Promise.all(
             response.data.map(async (post) => {
-               const commentsResponse = await axiosInstance.get(`${serviceRoutes.posts}/${post.id}/comments`);
-               return { ...post, commentCount: commentsResponse.data.length };  // Без фіксованого ліміту, отримуємо фактичну кількість
+               const commentsResponse = await axiosInstance.get(serviceRoutes.postsById(post.id));
+               return {...post, commentCount: commentsResponse.data.length};
             })
          );
       },
    });
 
-   const [chartData, setChartData] = useState({
-      options: {
-         chart: {
-            id: "comments-line-chart",
-            foreColor: theme === 'dark' ? '#f4f4f5' : '#010101',  // Колір тексту залежно від теми
-         },
-         xaxis: {
-            title: {
-               text: "Article",
-               style: {
-                  color: theme === 'dark' ? '#f4f4f5' : '#010101',  // Колір для осі X
-               },
+   const chartData = useMemo(() => {
+      if (posts.length === 0) {
+         return null;
+      }
+
+      const maxComments = Math.max(...posts.map((post) => post.commentCount));
+
+      return {
+         options: {
+            chart: {
+               id: 'comments-line-chart',
+               foreColor: textColor,
             },
-            categories: [] as number[],  // Буде динамічно оновлюватись
-            labels: {
-               rotate: -90,  // Менший кут повороту для кращої читабельності
-               maxHeight: 100,  // Обмеження висоти
-               hideOverlappingLabels: true,  // Приховування перекритих підписів
-               style: {
-                  fontSize: '12px',
+            xaxis: {
+               title: {
+                  text: 'Article',
                   style: {
-                     colors: theme === 'dark' ? '#f4f4f5' : '#010101',  // Колір підписів
+                     color: textColor,
                   },
                },
-            },
-            // tickAmount: 10,  // Відображає лише кожен 10-й підпис
-         },
-         yaxis: {
-            title: {
-               text: "Comments",
-            },
-            labels: {
-               style: {
-                  colors: theme === 'dark' ? '#f4f4f5' : '#010101',  // Колір підписів
-               },
-            },
-            min: 0,
-            // max буде динамічно встановлений залежно від фактичних даних
-         },
-         tooltip: {
-            theme: theme,  // 'dark' або 'light'
-         },
-         grid: {
-            borderColor: theme === 'dark' ? '#f4f4f5' : '#010101',  // Колір для сітки
-         },
-      },
-      series: [
-         {
-            name: "Comments",
-            data: [] as number[],  // Динамічно оновлюється
-         },
-      ],
-   });
-
-   useEffect(() => {
-      if (posts.length > 0) {
-         // Отримуємо максимальну кількість коментарів для динамічного налаштування осі Y
-         const maxComments = Math.max(...posts.map((post) => post.commentCount));
-
-         setChartData((prevChartData) => ({
-            ...prevChartData,  // Зберігаємо попередні налаштування
-            options: {
-               ...prevChartData.options,
-               chart: {
-                  ...prevChartData.options.chart,
-                  foreColor: theme === 'dark' ? '#f4f4f5' : '#010101',
-               },
-               xaxis: {
-                  ...prevChartData.options.xaxis,
+               categories: posts.map((_, index) => index + 1),
+               labels: {
+                  rotate: -90,
+                  maxHeight: 100,
+                  hideOverlappingLabels: true,
                   style: {
                      fontSize: '12px',
-                     colors: theme === 'dark' ? '#f4f4f5' : '#010101',
+                     colors: textColor,
                   },
-                  categories: Array.from({ length: posts.length }, (_, index) => index + 1),  // Оновлюємо категорії
-               },
-               yaxis: {
-                  ...prevChartData.options.yaxis,
-                  title: {
-                     ...prevChartData.options.yaxis.title,
-                     style: {
-                        color: theme === 'dark' ? '#f4f4f5' : '#010101',
-                     },
-                  },
-                  labels: {
-                     style: {
-                        colors: theme === 'dark' ? '#f4f4f5' : '#010101',
-                     },
-                  },
-                  max: maxComments,  // Встановлюємо максимальне значення для осі Y залежно від фактичної кількості коментарів
                },
             },
-            grid: {
-               borderColor: theme === 'dark' ? '#52525b' : '#e5e7eb',
+            yaxis: {
+               title: {
+                  text: 'Comments',
+                  style: {
+                     color: textColor,
+                  },
+               },
+               labels: {
+                  style: {
+                     colors: textColor,
+                  },
+               },
+               min: 0,
+               max: maxComments,
             },
             tooltip: {
-               theme: theme,
+               theme,
             },
-            series: [
-               {
-                  name: "Comments",
-                  data: posts.map((post) => post.commentCount),  // Оновлюємо кількість коментарів
-               },
-            ],
-         }));
-      }
-   }, [posts, theme]);
+            grid: {
+               borderColor: gridBorderColor,
+            },
+         },
+         series: [
+            {
+               name: 'Comments',
+               data: posts.map((post) => post.commentCount),
+            },
+         ],
+      };
+   }, [posts, textColor, gridBorderColor, theme]);
 
    return (
       <div className="container mx-auto py-8">
          <Card>
             <CardHeader>
-               <CardTitle className="text-2xl font-bold">Graph to display the number of comments for each article.</CardTitle>
+               <CardTitle className="text-2xl font-bold">
+                  Graph to display the number of comments for each article.
+               </CardTitle>
             </CardHeader>
             <CardContent>
                {isLoading ? (
-                  <TableLoadingSkeleton />
+                  <TableLoadingSkeleton/>
                ) : error ? (
                   <p className="text-red-500">{(error as Error).message}</p>
-               ) : (
+               ) : chartData ? (
                   <div className="row">
                      <div className="mixed-chart">
                         <Chart
                            options={chartData.options}
                            series={chartData.series}
-                           type="line"  // Тип графіка: лінійний
+                           type="line"
                            width="100%"
                            height="400"
                         />
                      </div>
                   </div>
-               )}
+               ) : null}
             </CardContent>
          </Card>
       </div>
    );
 }
 
-export default LineChartPage;
+export default ChartPage;
