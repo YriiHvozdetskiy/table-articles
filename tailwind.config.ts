@@ -9,6 +9,8 @@ const config: Config = {
    theme: {
       extend: {
          colors: {
+            dark: '#010101',
+            light: '#f4f4f5',
             background: 'hsl(var(--background))',
             foreground: 'hsl(var(--foreground))',
             card: {

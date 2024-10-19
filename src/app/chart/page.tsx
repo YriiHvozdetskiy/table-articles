@@ -14,6 +14,11 @@ interface Post {
    commentCount: number;
 }
 
+const THEMES_COLORS = {
+   light: '#f4f4f5',
+   dark: '#010101',
+};
+
 function LineChartPage() {
    const theme = useAppSelector((state) => state.theme.theme);
 
