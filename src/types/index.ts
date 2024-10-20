@@ -1,4 +1,12 @@
-export interface Post {
+export interface Posts {
    id: number;
-   commentCount: number;
+   title: string;
+   body: string;
+}
+
+export interface Comments {
+   id: number
+   name: string
+   email: string
+   body: string
 }

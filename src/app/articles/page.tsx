@@ -1,39 +1,17 @@
 'use client'
 
-import axiosInstance from "@/services/interceptor"
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card"
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
 import {Button} from "@/components/ui/button"
 import {useQuery} from "@tanstack/react-query";
 import Link from "next/link";
 import TableLoadingSkeleton from "@/components/table/TableLoadingSkeleton";
+import {serviceActions} from "@/services/serviceActions";
 
-interface Post {
-   id: number
-   title: string
-   body: string
-   commentCount: number
-}
-
-interface Comment {
-   id: number
-   body: string
-}
 
 function ArticlesPage() {
    const {data: posts = [], isLoading, error} = useQuery({
-      queryKey: ['posts'],
-      queryFn: async () => {
-         const response = await axiosInstance.get<Post[]>('/posts');
-         return await Promise.all(
-            response.data.map(async (post) => {
-               const commentsResponse = await axiosInstance.get<Comment[]>(
-                  `/posts/${post.id}/comments`
-               );
-               return {...post, commentCount: commentsResponse.data.length};
-            })
-         );
-      },
+      ...serviceActions.getPostsQueryOptions(),
    });
 
    return (

@@ -25,7 +25,7 @@ function ChartPage() {
    const {textColor, gridBorderColor} = THEMES_COLORS[theme];
 
    const {data: posts = [], isLoading, error,} = useQuery({
-      ...serviceActions.getChartQueryOptions(),
+      ...serviceActions.getPostsQueryOptions(),
    });
 
    const chartData = useMemo(() => {
