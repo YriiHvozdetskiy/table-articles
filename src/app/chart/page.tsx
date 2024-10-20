@@ -5,7 +5,7 @@ import {useMemo} from 'react';
 import Chart from 'react-apexcharts';
 import TableLoadingSkeleton from '@/components/table/TableLoadingSkeleton';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
-import {useAppSelector} from '@/hooks/useAppSelector';
+import {useAppSelector} from '@/hooks/redux/useAppSelector';
 import {serviceActions} from "@/services/serviceActions";
 
 const THEMES_COLORS = {

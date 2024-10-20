@@ -9,8 +9,8 @@ import {
    SelectTrigger,
    SelectValue,
 } from '@/components/ui/select';
-import {useAppDispatch} from "@/hooks/useAppDispatch";
-import {useAppSelector} from "@/hooks/useAppSelector";
+import {useAppDispatch} from "@/hooks/redux/useAppDispatch";
+import {useAppSelector} from "@/hooks/redux/useAppSelector";
 import {setTheme} from "@/store/theme/themeSlice";
 
 const themes = [
