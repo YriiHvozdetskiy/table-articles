@@ -2,49 +2,14 @@
 
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card"
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
-import {Button} from "@/components/ui/button"
 import {useQuery} from "@tanstack/react-query";
-import Link from "next/link";
 import TableLoadingSkeleton from "@/components/table/TableLoadingSkeleton";
 import {serviceActions} from "@/services/serviceActions";
-import {useReactTable, ColumnDef, flexRender, getCoreRowModel} from '@tanstack/react-table';
-import {Posts} from "@/types";
+import {flexRender, getCoreRowModel, useReactTable} from '@tanstack/react-table';
+import {columns} from "@/components/pages/articles/table/columns";
 
 function ArticlesPage() {
-   const {data: posts = [], isLoading, error} = useQuery({
-      ...serviceActions.getPostsQueryOptions(),
-   });
-
-   const columns: ColumnDef<Posts>[] = [
-      {
-         accessorKey: 'id',
-         header: 'ID',
-      },
-      {
-         accessorKey: 'title',
-         header: 'Title',
-      },
-      {
-         accessorKey: 'body',
-         header: 'Description',
-         cell: ({cell}) => (
-            <div className='truncate max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl'>
-               {cell.getValue()}
-            </div>
-         ),
-      },
-      {
-         accessorKey: 'commentCount',
-         header: 'Comments',
-         cell: ({row}) => (
-            <Link href={`/articles/${row.original.id}`} passHref>
-               <Button variant="link">
-                  {row.original.commentCount}
-               </Button>
-            </Link>
-         ),
-      },
-   ];
+   const {data: posts = [], isLoading, error} = useQuery(serviceActions.getPostsQueryOptions());
 
    const table = useReactTable({
       data: posts,
@@ -63,7 +28,7 @@ function ArticlesPage() {
                   <TableLoadingSkeleton/>
                ) : error ? (
                   <p className="text-red-500">{(error as Error).message}</p>
-               ) : (
+               ) : table.getRowModel().rows?.length ? (
                   <Table>
                      <TableHeader>
                         {table.getHeaderGroups().map(headerGroup => (
@@ -72,8 +37,7 @@ function ArticlesPage() {
                                  <TableHead key={header.id}>
                                     {header.isPlaceholder
                                        ? null
-                                       : flexRender(
-                                          header.column.columnDef.header, header.getContext()
+                                       : flexRender(header.column.columnDef.header, header.getContext()
                                        )}
                                  </TableHead>
                               ))}
@@ -92,6 +56,8 @@ function ArticlesPage() {
                         ))}
                      </TableBody>
                   </Table>
+               ) : (
+                  <p>No data available.</p>
                )}
             </CardContent>
          </Card>
