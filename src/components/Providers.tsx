@@ -1,14 +1,33 @@
 "use client";
 
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {ReactNode} from "react";
 import {Provider} from "react-redux";
 import {PersistGate} from 'redux-persist/integration/react';
 import store, {persistor} from "@/store";
+import {
+   isServer,
+   QueryClient,
+   QueryClientProvider,
+} from '@tanstack/react-query'
 
-const queryClient = new QueryClient();
+function makeQueryClient() {
+   return new QueryClient()
+}
+
+let browserQueryClient: QueryClient | undefined = undefined
+
+function getQueryClient() {
+   if (isServer) {
+      return makeQueryClient()
+   } else {
+      if (!browserQueryClient) browserQueryClient = makeQueryClient()
+      return browserQueryClient
+   }
+}
 
 function Providers({children}: Readonly<{ children: ReactNode }>) {
+   const queryClient = getQueryClient()
+
    return (
       <QueryClientProvider client={queryClient}>
          <Provider store={store}>
