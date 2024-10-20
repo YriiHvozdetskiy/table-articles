@@ -1,14 +1,15 @@
-"use client"
+'use client';
 
-import {useQuery} from "@tanstack/react-query";
-import {flexRender, getCoreRowModel, useReactTable,} from "@tanstack/react-table";
-import {Card, CardContent, CardHeader, CardTitle,} from "@/components/ui/card";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
-import Link from "next/link";
-import {Button} from "@/components/ui/button";
-import TableLoadingSkeleton from "@/components/table/TableLoadingSkeleton";
-import {serviceActions} from "@/services/serviceActions";
-import {columns} from "@/components/pages/article-details/table/columns";
+import {useQuery} from '@tanstack/react-query';
+import {flexRender, getCoreRowModel, useReactTable,} from '@tanstack/react-table';
+import Link from 'next/link';
+
+import {Card, CardContent, CardHeader, CardTitle,} from '@/components/ui/card';
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from '@/components/ui/table';
+import {Button} from '@/components/ui/button';
+import TableLoadingSkeleton from '@/components/table/TableLoadingSkeleton';
+import {serviceActions} from '@/services/serviceActions';
+import {columns} from '@/components/pages/article-details/table/columns';
 
 function ArticleDetailsPage({params}: { params: { id: string } }) {
    const {data: comments = [], isLoading, error} =

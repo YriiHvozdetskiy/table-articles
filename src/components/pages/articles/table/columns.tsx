@@ -1,7 +1,8 @@
-import {ColumnDef} from "@tanstack/react-table";
-import {Posts} from "@/types";
-import Link from "next/link";
-import {Button} from "@/components/ui/button";
+import {ColumnDef} from '@tanstack/react-table';
+import Link from 'next/link';
+
+import {Posts} from '@/types';
+import {Button} from '@/components/ui/button';
 
 export const columns: ColumnDef<Posts>[] = [
    {

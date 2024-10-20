@@ -1,5 +1,5 @@
-import Navigation from "@/components/Navigation";
-import ThemeSwitcher from "@/components/theme/ThemeSwitcher";
+import Navigation from '@/components/Navigation';
+import ThemeSwitcher from '@/components/theme/ThemeSwitcher';
 
 function Header() {
 

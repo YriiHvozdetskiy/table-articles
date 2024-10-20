@@ -1,12 +1,13 @@
-'use client'
+'use client';
 
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card"
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
-import {useQuery} from "@tanstack/react-query";
-import TableLoadingSkeleton from "@/components/table/TableLoadingSkeleton";
-import {serviceActions} from "@/services/serviceActions";
+import {useQuery} from '@tanstack/react-query';
 import {flexRender, getCoreRowModel, useReactTable} from '@tanstack/react-table';
-import {columns} from "@/components/pages/articles/table/columns";
+
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
+import TableLoadingSkeleton from '@/components/table/TableLoadingSkeleton';
+import {serviceActions} from '@/services/serviceActions';
+import {columns} from '@/components/pages/articles/table/columns';
 
 function Articles() {
    const {data: posts = [], isLoading, error} = useQuery({
@@ -65,7 +66,7 @@ function Articles() {
             </CardContent>
          </Card>
       </div>
-   )
+   );
 }
 
 export default Articles;

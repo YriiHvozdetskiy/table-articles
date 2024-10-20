@@ -1,7 +1,8 @@
-"use client";
+'use client';
 
 import {Moon, Sun} from 'lucide-react';
 import {useEffect} from 'react';
+
 import {
    Select,
    SelectContent,
@@ -9,9 +10,9 @@ import {
    SelectTrigger,
    SelectValue,
 } from '@/components/ui/select';
-import {useAppDispatch} from "@/hooks/redux/useAppDispatch";
-import {useAppSelector} from "@/hooks/redux/useAppSelector";
-import {setTheme} from "@/store/theme/themeSlice";
+import {useAppDispatch} from '@/hooks/redux/useAppDispatch';
+import {useAppSelector} from '@/hooks/redux/useAppSelector';
+import {setTheme} from '@/store/theme/themeSlice';
 
 const themes = [
    {value: 'light', label: 'Light', icon: Sun},

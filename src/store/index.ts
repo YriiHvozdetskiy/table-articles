@@ -8,6 +8,7 @@ import {
    PURGE,
    REGISTER,
 } from 'redux-persist';
+
 import {themeReducer} from '@/store/theme/themeSlice';
 
 const store = configureStore({

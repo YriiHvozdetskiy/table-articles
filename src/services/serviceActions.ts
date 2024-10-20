@@ -1,8 +1,9 @@
-import {queryOptions} from "@tanstack/react-query";
-import {QUERY_KEYS} from "@/constants/queryKeys";
-import axiosInstance from "@/services/interceptor";
-import {serviceRoutes} from "@/services/serviceRoutes";
-import {Comments, Posts} from "@/types";
+import {queryOptions} from '@tanstack/react-query';
+
+import {QUERY_KEYS} from '@/constants/queryKeys';
+import axiosInstance from '@/services/interceptor';
+import {serviceRoutes} from '@/services/serviceRoutes';
+import {Comments, Posts} from '@/types';
 
 
 export const serviceActions = {
@@ -26,4 +27,4 @@ export const serviceActions = {
          return response.data;
       },
    })
-}
+};

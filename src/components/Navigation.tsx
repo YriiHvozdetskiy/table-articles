@@ -1,8 +1,9 @@
-'use client'
+'use client';
 
-import Link from "next/link";
-import {mockNavigationLinks} from "@/mocks/navigation";
-import {usePathname} from "next/navigation";
+import Link from 'next/link';
+import {usePathname} from 'next/navigation';
+
+import {mockNavigationLinks} from '@/mocks/navigation';
 
 function Navigation() {
    const currentRoute = usePathname();
@@ -12,7 +13,7 @@ function Navigation() {
          <ul
             className={'flex flex-row space-x-5 justify-center items-center'}>
             {mockNavigationLinks.map((link) => {
-               const isCurrent = currentRoute === link.href
+               const isCurrent = currentRoute === link.href;
 
                return (
                   <li key={link.label}>
@@ -23,7 +24,7 @@ function Navigation() {
                         {link.label}
                      </Link>
                   </li>
-               )
+               );
             })}
          </ul>
       </nav>
